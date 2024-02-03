@@ -2,3 +2,5 @@ google-cloud-aiplatform
 Flask
 python-dotenv
 google-generativeai
+flask-cors
+bs4

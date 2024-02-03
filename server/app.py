@@ -2,8 +2,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 import requests
 from bs4 import BeautifulSoup
-from gemini import evaluate
 from test.tanim_module import get_fact_or_opinion, get_toxicity, detect_implicit_hate
+from gemini import evaluate, getArticleInfo
 
 app = Flask(__name__)
 CORS(app)
@@ -21,9 +21,11 @@ def handle_article_link():
     if response.status_code == 200:
         # Parse the HTML content
         soup = BeautifulSoup(response.text, "html.parser")
-        print("Textrwerwe", soup.text)
+        articleInfo = getArticleInfo(soup.text)
         return jsonify(
-            {"message": "Text extracted successfully", "bodyText": soup.text}
+            {
+                "articleInfo": articleInfo,
+            }
         )
     else:
         return (
@@ -47,10 +49,9 @@ def gemini():
     return evaluate(request.json["prompt"])
 
 
-
-@app.route('/analyze/implicit-hate', methods=['POST'])
+@app.route("/analyze/implicit-hate", methods=["POST"])
 def implicit_hate_route():
-    text = request.json.get('text', '')
+    text = request.json.get("text", "")
     result = detect_implicit_hate(text)
     return jsonify(result)
 
