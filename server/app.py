@@ -3,6 +3,7 @@ from flask_cors import CORS, cross_origin
 import requests
 from bs4 import BeautifulSoup
 from gemini import evaluate
+from test.tanim_module import get_fact_or_opinion, get_toxicity, detect_implicit_hate
 
 app = Flask(__name__)
 CORS(app)
@@ -44,6 +45,14 @@ def hello_world():
 @app.route("/gemini", methods=["GET", "POST"])
 def gemini():
     return evaluate(request.json["prompt"])
+
+
+
+@app.route('/analyze/implicit-hate', methods=['POST'])
+def implicit_hate_route():
+    text = request.json.get('text', '')
+    result = detect_implicit_hate(text)
+    return jsonify(result)
 
 
 if __name__ == "__main__":
