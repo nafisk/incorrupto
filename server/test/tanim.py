@@ -58,7 +58,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 # Import your functions here
-from tanim_module import get_fact_or_opinion, get_toxicity, detect_implicit_hate
+from tanim_module import analyze_text
 
 app = Flask(__name__)
 CORS(app)  # Enables CORS for all domains on all routes
@@ -80,6 +80,10 @@ def implicit_hate_route():
     text = request.json.get('text', '')
     result = detect_implicit_hate(text)
     return jsonify(result)
+
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
