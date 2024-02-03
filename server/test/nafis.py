@@ -1,19 +1,56 @@
-import openai
-from dotenv import load_dotenv
 import os
+from openai import AsyncOpenAI
+import requests
+import json
 
-load_dotenv()
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# client = AsyncOpenAI(
+#     # This is the default and can be omitted
+#     api_key=os.environ.get("OPENAI_API_KEY"),
+# )
 
-def generate_text(prompt):
-    try:
-        response = openai.Completion.create(
-          engine="text-davinci-003",
-          prompt=prompt,
-          max_tokens=150
-        )
-        print(response.choices[0].text.strip())
-    except Exception as e:
-        print(f"An error occurred: {e}")
 
-generate_text("Translate the following English text to French: 'Hello, how are you?'")
+# response = client.images.generate(
+#   model="dall-e-3",
+#   prompt="a white siamese cat",
+#   size="1024x1024",
+#   quality="standard",
+#   n=1,
+# )
+
+# image_url = response
+
+
+
+
+def generate_image(prompt, api_key):
+    headers = {
+        'Authorization': f'Bearer {api_key}'
+    }
+    
+    json_data = {
+        'prompt': prompt,
+        'n': 1,  # number of images to generate
+        'size': '1024x1024'  # image size
+    }
+    
+    response = requests.post('https://api.openai.com/v1/images/generations', headers=headers, json=json_data)
+    
+    if response.status_code == 200:
+        print("Image generated successfully.")
+        return response.json()
+    else:
+        print(f"Error: {response.status_code}")
+        return response.text
+
+# Replace 'your_api_key_here' with your actual DALL-E API key
+api_key = os.environ.get("OPENAI_API_KEY")
+
+# Replace 'your_prompt_here' with the desired text prompt
+prompt = 'president photo as cartoon'
+
+result = generate_image(prompt, api_key)
+print(result)
+
+# Saving the result as a JSON file
+with open('dalle_result.json', 'w') as file:
+    json.dump(result, file)
