@@ -3,7 +3,7 @@ from flask_cors import CORS, cross_origin
 import requests
 from bs4 import BeautifulSoup
 from test.tanim_module import get_fact_or_opinion, get_toxicity, detect_implicit_hate
-from gemini import evaluate, getArticleInfo
+from gemini import evaluate, getArticleInfo, getVideoInfo
 
 app = Flask(__name__)
 CORS(app)
@@ -37,6 +37,18 @@ def handle_article_link():
             ),
             400,
         )
+
+
+@app.route("/submit-video-link", methods=["POST"])
+def handle_video_link():
+    data = request.json
+    video_link = data.get("videoLink")
+    videoInfo = getVideoInfo(video_link)
+    return jsonify(
+        {
+            "videoInfo": videoInfo,
+        }
+    )
 
 
 @app.route("/")

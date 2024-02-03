@@ -4,3 +4,4 @@ python-dotenv
 google-generativeai
 flask-cors
 bs4
+youtube-transcript-api
