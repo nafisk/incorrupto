@@ -1,9 +1,14 @@
 import Analysis from './page/Analysis';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
     <div className='App'>
-      <Analysis />
+      <Router>
+        <Routes>
+          <Route path='/' element={<Analysis />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
