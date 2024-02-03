@@ -2,7 +2,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 import requests
 from bs4 import BeautifulSoup
-from test.tanim_module import get_fact_or_opinion, get_toxicity, detect_implicit_hate
+
+# from test.tanim_module import get_fact_or_opinion, get_toxicity, detect_implicit_hate
 from gemini import evaluate, getArticleInfo, getVideoInfo
 
 app = Flask(__name__)

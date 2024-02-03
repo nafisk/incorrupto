@@ -76,6 +76,22 @@ def getOfInterest(text):
     return names
 
 
+def getDate(html):
+    prompt = (
+        "Given the HTML below, delimited by ```, extract the date of publication of the article.\n\n"
+        + html
+    )
+    return evaluate(prompt)
+
+
+def getAuthor(html):
+    prompt = (
+        "Given the HTML below, delimited by ```, extract the author of the article.\n\n"
+        + html
+    )
+    return evaluate(prompt)
+
+
 def getTranscript(video_id):
     data = YouTubeTranscriptApi.get_transcript(video_id)
     print(data)
@@ -90,6 +106,8 @@ def getArticleInfo(html):
     INFO["text"] = getText(html)
     INFO["summary"] = getSummary(INFO["text"])
     INFO["ofInterest"] = getOfInterest(INFO["text"])
+    INFO["date"] = getDate(html)
+    INFO["author"] = getAuthor(html)
     return INFO
 
 
