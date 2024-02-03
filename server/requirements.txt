@@ -1,0 +1,4 @@
+google-cloud-aiplatform
+Flask
+python-dotenv
+google-generativeai
