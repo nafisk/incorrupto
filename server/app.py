@@ -1,13 +1,12 @@
 from flask import Flask, request, jsonify
-import json
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 import requests
 from bs4 import BeautifulSoup
 
 # from test.tanim_module import get_fact_or_opinion, get_toxicity, detect_implicit_hate
 from gemini import evaluate, getArticleInfo, getVideoInfo
-from server.test.amir import analyze_text
-from server.test.amir_dalle_3 import generate_image
+from huggingFaceModels import analyze_text
+from dalle3 import generate_image
 
 app = Flask(__name__)
 CORS(app)
@@ -15,49 +14,62 @@ CORS(app)
 
 @app.route("/submit-article-link", methods=["POST"])
 def handle_article_link():
-    data = request.json
-    article_link = data.get("articleLink")
+    try:
+        data = request.json
+        article_link = data.get("articleLink")
 
-    # Fetch the HTML content of the article
-    response = requests.get(article_link)
+        # Fetch the HTML content of the article
+        response = requests.get(article_link)
 
-    # Check if the request was successful
-    if response.status_code == 200:
-        # Parse the HTML content
-        soup = BeautifulSoup(response.text, "html.parser")
-        articleInfo = getArticleInfo(soup.text)
-        cleaned_article = evaluate(f"Given the HTML content extracted from a webpage, please provide a cleaned "
-                                   f"version that contains only the main article text, free from any HTML tags, "
-                                   f"advertisements, navigation elements, and extraneous information. Here is the "
-                                   f"HTML content: {soup.text()}")
-        article_summary = evaluate(f"Please provide a concise summary of the following article text in 5 to 10 "
-                                   f"sentences, capturing the essential points and main themes: {cleaned_article}")
-        important_people = evaluate(f"From the article provided, identify and list the names of key individuals "
-                                    f"mentioned. Please format the output as a Python list, like this: ['person_1', "
-                                    f"'person_2', 'person_3']. Here is the article text: {cleaned_article}")
-        dalle_image_link = generate_image(article_summary)
-        analytics_metrics = analyze_text(cleaned_article)
-        analytics_metrics = analyze_text(cleaned_article)
-        return jsonify(
-            {
+        # Check if the request was successful
+        if response.status_code == 200:
+            try:
+                # Parse the HTML content
+                soup = BeautifulSoup(response.text, "html.parser")
+                articleInfo = getArticleInfo(soup.text)
+            except Exception as e:
+                return jsonify({"error": f"Failed to parse article content: {e}"}), 500
+
+            try:
+                cleaned_article = evaluate("Your evaluation call for cleaned_article here")
+            except Exception as e:
+                return jsonify({"error": f"Failed during article cleaning: {e}"}), 500
+
+            try:
+                article_summary = evaluate("Your evaluation call for article_summary here")
+            except Exception as e:
+                return jsonify({"error": f"Failed during article summarization: {e}"}), 500
+
+            try:
+                important_people = evaluate("Your evaluation call for important_people here")
+            except Exception as e:
+                return jsonify({"error": f"Failed to identify important people: {e}"}), 500
+
+            try:
+                # dalle_image_link = generate_image(article_summary)
+                1==1
+            except Exception as e:
+                return jsonify({"error": f"Failed to generate image with DALL-E: {e}"}), 500
+
+            try:
+                analytics_metrics = analyze_text(cleaned_article)
+            except Exception as e:
+                return jsonify({"error": f"Failed during text analysis: {e}"}), 500
+
+            # If all operations are successful, return the combined results
+            return jsonify({
                 "articleInfo": articleInfo,
-                "cleanedArticleText": cleaned_article,
+                "cleanedArticleText": article_summary,
                 "important_people": important_people,
-                "dalle_image_link": dalle_image_link,
-                "analytics_metrics": json.dumps(analytics_metrics)  # converting a python dict
+                "analytics_metrics": analytics_metrics  # converting a python dict
+            })
+        else:
+            return jsonify({"message": "Failed to fetch page", "error": "Could not retrieve the page from the "
+                                                                        "provided link"}), 400
 
-            }
-        )
-    else:
-        return (
-            jsonify(
-                {
-                    "message": "Failed to fetch page",
-                    "error": "Could not retrieve the page from the provided link",
-                }
-            ),
-            400,
-        )
+    except Exception as e:
+        # Catch any other exception that was not handled
+        return jsonify({"error": f"An unexpected error occurred: {e}"}), 500
 
 
 @app.route("/submit-video-link", methods=["POST"])
