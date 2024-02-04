@@ -26,12 +26,12 @@ def generate_image(prompt, api_key):
 # Replace 'your_api_key_here' with your actual DALL-E API key
 api_key = os.environ.get("OPENAI_API_KEY")
 
-# Replace 'your_prompt_here' with the desired text prompt
-prompt = 'president photo as cartoon'
+# # Replace 'your_prompt_here' with the desired text prompt
+# prompt = 'president photo as cartoon'
 
-result = generate_image(prompt, api_key)
-print(result)
+# result = generate_image(prompt, api_key)
+# print(result)
 
-# Saving the result as a JSON file
-with open('dalle_result.json', 'w') as file:
-    json.dump(result, file)
+# # Saving the result as a JSON file
+# with open('dalle_result.json', 'w') as file:
+#     json.dump(result, file)

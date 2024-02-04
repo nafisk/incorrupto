@@ -21,7 +21,7 @@ def generate_image(prompt):
     return image_url
 
 
-# Example usage:
-prompt = "a white siamese cat"
-image_url = generate_image(prompt)
-print("Generated image URL:", image_url)
+# # Example usage:
+# prompt = "a white siamese cat"
+# image_url = generate_image(prompt)
+# print("Generated image URL:", image_url)
