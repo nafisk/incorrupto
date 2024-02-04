@@ -5,8 +5,8 @@ client = OpenAI()
 
 
 def generate_image(prompt):
-    prompt = prompt + ("Based on this political article, can you create a satirical political cartoon that highlights "
-                       "the main points with a humorous or ironic twist?")
+    prompt = prompt + (
+        "Please create an illustration that conveys the main themes of the article in a thoughtful and engaging manner.")
 
     # Generate an image using the DALL-E model with the provided prompt
     response = client.images.generate(

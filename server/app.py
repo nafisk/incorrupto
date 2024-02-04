@@ -5,8 +5,8 @@ from bs4 import BeautifulSoup
 
 # from test.tanim_module import get_fact_or_opinion, get_toxicity, detect_implicit_hate
 from gemini import evaluate, getArticleInfo, getVideoInfo
-from amir import analyze_text
-from amir_dalle_3 import generate_image
+from huggingFaceModels import analyze_text
+from dalle3 import generate_image
 
 app = Flask(__name__)
 CORS(app)
@@ -46,7 +46,8 @@ def handle_article_link():
                 return jsonify({"error": f"Failed to identify important people: {e}"}), 500
 
             try:
-                dalle_image_link = generate_image(article_summary)
+                # dalle_image_link = generate_image(article_summary)
+                1==1
             except Exception as e:
                 return jsonify({"error": f"Failed to generate image with DALL-E: {e}"}), 500
 
@@ -60,7 +61,6 @@ def handle_article_link():
                 "articleInfo": articleInfo,
                 "cleanedArticleText": article_summary,
                 "important_people": important_people,
-                "dalle_image_link": dalle_image_link,
                 "analytics_metrics": analytics_metrics  # converting a python dict
             })
         else:
