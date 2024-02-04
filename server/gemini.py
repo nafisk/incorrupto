@@ -52,7 +52,7 @@ def evaluate(prompt):
 
 def getText(html):
     prompt = (
-        "Given the HTML below, delimited by ```, extract all the text from the artcle. Extract exact text, do not summarize it.\n\n"
+        "Given the HTML below, delimited by ```, extract all the text from the article. Extract exact text, do not summarize it.\n\n"
         + html
     )
     return evaluate(prompt)
@@ -65,7 +65,7 @@ def getSummary(text):
 
 def getPlacesOfInterest(text):
     prompt = (
-        "Given the text below, delimited by ```, list all Important geographic Places mentioned.\n\n"
+        "Given the text below, delimited by ```, list ALL main geographic places mentioned in the article.\n\n"
         + text
     )
     response = evaluate(prompt)
@@ -77,7 +77,7 @@ def getPlacesOfInterest(text):
 
 def getPersonsOfInterest(text):
     prompt = (
-        "Given the text below, delimited by ```, list all persons mentioned.\n\n"
+        "Given the text below, delimited by ```, list ALL main persons mentioned in the article.\n\n"
         + text
     )
     response = evaluate(prompt)

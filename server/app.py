@@ -63,7 +63,7 @@ def handle_article_link():
 @app.route("/get_dalle", methods=["GET"])
 def get_dalle():
     data = request.json
-    prompt = article_summaries[-1]
+    prompt = data.get("summary")
 
     if prompt:
         try:
@@ -108,7 +108,7 @@ def create_user():
     )
 
 
-@app.route("/get-user", methods=["GET"])
+@app.route("/get-user", methods=["POST"])
 def get_user():
     data = request.json
     email = data.get("email")

@@ -8,6 +8,7 @@ import {
   SheetDescription,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import axios from 'axios';
 
 function Login() {
   // State for email and password
@@ -15,15 +16,30 @@ function Login() {
   const [password, setPassword] = useState('');
 
   // Check local storage for user data
-  const user = localStorage.getItem('user');
-  if (user) {
-    console.log('User found:', user);
-  }
+  // const user = localStorage.getItem('user');
+  // if (user) {
+  //   console.log('User found:', user);
+  // }
 
   // Handle login
-  const handleLogin = () => {
-    console.log('Login clicked with email:', email, 'and password:', password);
-    // Add your login logic here
+  const handleLogin = async () => {
+    const data = {
+      email: email,
+      password: password,
+    };
+
+    axios
+      .post('http://127.0.0.1:5000/get-user', data, {
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then(response => {
+        console.log(response.data);
+        // store user data in local storage
+        localStorage.setItem('user', JSON.stringify(response.data['user']));
+      })
+      .catch(error => {
+        console.error('There was an error!', error);
+      });
   };
 
   return (
@@ -62,11 +78,13 @@ function Login() {
               placeholder='Email'
               className='w-full p-2 mb-4 border rounded'
               value={email}
+              required
               onChange={e => setEmail(e.target.value)}
             />
             <input
               type='password'
               placeholder='Password'
+              required
               className='w-full p-2 mb-4 border rounded'
               value={password}
               onChange={e => setPassword(e.target.value)}
