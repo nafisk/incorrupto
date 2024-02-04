@@ -64,11 +64,13 @@ def handle_article_link():
 
 
 
-@app.route("/get_dalle", methods=["GET"])
+@app.route("/get_dalle", methods=["POST"])
 def get_dalle():
     data = request.json
     prompt = data.get("summary")
-
+    # print("prompt", prompt)
+    
+    
     if prompt:
         try:
             # Use the generate_image function to create an image and get its URL
