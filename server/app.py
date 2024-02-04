@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-import json
 from flask_cors import CORS, cross_origin
 import requests
 from bs4 import BeautifulSoup
@@ -41,10 +40,10 @@ def handle_article_link():
         return jsonify(
             {
                 "articleInfo": articleInfo,
-                "cleanedArticleText": cleaned_article,
+                "cleanedArticleText": article_summary,
                 "important_people": important_people,
                 "dalle_image_link": dalle_image_link,
-                "analytics_metrics": json.dumps(analytics_metrics)  # converting a python dict
+                "analytics_metrics": analytics_metrics  # converting a python dict
 
             }
         )

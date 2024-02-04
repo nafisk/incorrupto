@@ -19,7 +19,8 @@ def analyze_text(text):
         "toxicity": "https://api-inference.huggingface.co/models/unitary/unbiased-toxic-roberta",
         "implicit_hate": "https://api-inference.huggingface.co/models/tomh/toxigen_roberta",
         "politicalBiasBERT": "https://api-inference.huggingface.co/models/bucketresearch/politicalBiasBERT",
-        "inappropriate_text_classifier": "https://api-inference.huggingface.co/models/michellejieli/inappropriate_text_classifier"
+        "inappropriate_text_classifier": "https://api-inference.huggingface.co/models/michellejieli"
+                                         "/inappropriate_text_classifier"
     }
 
     results = {}
