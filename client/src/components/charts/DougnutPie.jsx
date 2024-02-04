@@ -21,7 +21,7 @@ const DoughnutPie = ({ data, options, chartType = 'doughnut' }) => {
 
   // Style the container to control the width of the chart
   return (
-    <div style={{ width: '50%', margin: 'auto' }}>
+    <div style={{ width: '70%', margin: 'auto' }}>
       <canvas ref={chartRef} />
     </div>
   );

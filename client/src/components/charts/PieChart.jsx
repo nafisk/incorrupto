@@ -21,7 +21,7 @@ const PieChart = ({ data, options }) => {
 
   // Adjust the div style to control the width of the pie chart
   return (
-    <div style={{ width: '30%', margin: 'auto' }}>
+    <div style={{ width: '70%', margin: 'auto' }}>
       <canvas ref={chartRef} />
     </div>
   );

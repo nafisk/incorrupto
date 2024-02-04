@@ -1,8 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ChartSection from './ChartSection';
 
-function AnalysisCharts({ articleData }) {
-  const [showYoutube, setShowYoutube] = useState(false);
+function AnalysisCharts({ articleData, showYoutube, url }) {
+  const [youtubeVideoID, setYoutubeVideoID] = useState('');
+
+  function extractQueryString(url) {
+    const queryStart = url.indexOf('?');
+    if (queryStart === -1) {
+      return '';
+    }
+    return url.substring(queryStart + 3);
+  }
+
+  useEffect(() => {
+    if (url !== '') {
+      setYoutubeVideoID(extractQueryString(url));
+    }
+  }, [url]);
+
+  // get user id from local storage
 
   return (
     <div className='mt-12'>
@@ -64,7 +80,7 @@ function AnalysisCharts({ articleData }) {
             <iframe
               width='100%'
               height='315'
-              src='https://www.youtube.com/embed/[VIDEO_ID]'
+              src={`https://www.youtube.com/embed/${youtubeVideoID}`}
               title='YouTube video player'
               frameBorder='0'
               allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
@@ -100,7 +116,7 @@ function AnalysisCharts({ articleData }) {
       </div>
 
       {/* Display Charts */}
-      <ChartSection />
+      <ChartSection articleData={articleData} />
     </div>
   );
 }
