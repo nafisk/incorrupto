@@ -27,3 +27,4 @@ dist-ssr
 *venv
 *venv*
 __pycache__
+*/google-credentials.json

@@ -7,6 +7,10 @@ from bs4 import BeautifulSoup
 from gemini import evaluate, getArticleInfo, getVideoInfo
 from huggingFaceModels import analyze_text
 from dalle3 import generate_image
+from db import authUser, addUser
+
+# from test.amir import analyze_text
+# from test.amir_dalle_3 import generate_image
 
 app = Flask(__name__)
 CORS(app)
@@ -31,25 +35,40 @@ def handle_article_link():
                 return jsonify({"error": f"Failed to parse article content: {e}"}), 500
 
             try:
-                cleaned_article = evaluate("Your evaluation call for cleaned_article here")
+                cleaned_article = evaluate(
+                    "Your evaluation call for cleaned_article here"
+                )
             except Exception as e:
                 return jsonify({"error": f"Failed during article cleaning: {e}"}), 500
 
             try:
-                article_summary = evaluate("Your evaluation call for article_summary here")
+                article_summary = evaluate(
+                    "Your evaluation call for article_summary here"
+                )
             except Exception as e:
-                return jsonify({"error": f"Failed during article summarization: {e}"}), 500
+                return (
+                    jsonify({"error": f"Failed during article summarization: {e}"}),
+                    500,
+                )
 
             try:
-                important_people = evaluate("Your evaluation call for important_people here")
+                important_people = evaluate(
+                    "Your evaluation call for important_people here"
+                )
             except Exception as e:
-                return jsonify({"error": f"Failed to identify important people: {e}"}), 500
+                return (
+                    jsonify({"error": f"Failed to identify important people: {e}"}),
+                    500,
+                )
 
             try:
                 # dalle_image_link = generate_image(article_summary)
-                1==1
+                1 == 1
             except Exception as e:
-                return jsonify({"error": f"Failed to generate image with DALL-E: {e}"}), 500
+                return (
+                    jsonify({"error": f"Failed to generate image with DALL-E: {e}"}),
+                    500,
+                )
 
             try:
                 analytics_metrics = analyze_text(cleaned_article)
@@ -57,19 +76,50 @@ def handle_article_link():
                 return jsonify({"error": f"Failed during text analysis: {e}"}), 500
 
             # If all operations are successful, return the combined results
-            return jsonify({
-                "articleInfo": articleInfo,
-                "cleanedArticleText": article_summary,
-                "important_people": important_people,
-                "analytics_metrics": analytics_metrics  # converting a python dict
-            })
+            return jsonify(
+                {
+                    "articleInfo": articleInfo,
+                    "cleanedArticleText": article_summary,
+                    "important_people": important_people,
+                    "analytics_metrics": analytics_metrics,  # converting a python dict
+                }
+            )
         else:
-            return jsonify({"message": "Failed to fetch page", "error": "Could not retrieve the page from the "
-                                                                        "provided link"}), 400
+            return (
+                jsonify(
+                    {
+                        "message": "Failed to fetch page",
+                        "error": "Could not retrieve the page from the "
+                        "provided link",
+                    }
+                ),
+                400,
+            )
 
     except Exception as e:
         # Catch any other exception that was not handled
-        return jsonify({"error": f"An unexpected error occurred: {e}"}), 500
+        return (
+            jsonify(
+                {
+                    "error": f"An unexpected error occurred: {e}",
+                    "dalle_image_link": dalle_image_link,
+                    "analytics_metrics": json.dumps(
+                        analytics_metrics
+                    ),  # converting a python dict
+                }
+            ),
+            500,
+        )
+    else:
+        return (
+            jsonify(
+                {
+                    "message": "Failed to fetch page",
+                    "error": "Could not retrieve the page from the provided link",
+                }
+            ),
+            400,
+        )
 
 
 @app.route("/submit-video-link", methods=["POST"])
@@ -82,6 +132,51 @@ def handle_video_link():
             "videoInfo": videoInfo,
         }
     )
+
+
+@app.route("/create-user", methods=["POST"])
+def create_user():
+    data = request.json
+    name = data.get("name")
+    email = data.get("email")
+    password = data.get("password")
+    user = addUser(
+        {
+            "cf1:name": name,
+            "cf1:email": email,
+            "cf1:password": password,
+        },
+    )
+    return jsonify(
+        {
+            "message": "User created successfully",
+        }
+    )
+
+
+@app.route("/get-user", methods=["GET"])
+def get_user():
+    data = request.json
+    email = data.get("email")
+    password = data.get("password")
+
+    user = authUser(email, password)
+    if authUser:
+        return jsonify(
+            {
+                "user": user,
+            }
+        )
+    else:
+        return (
+            jsonify(
+                {
+                    "message": "Failed to authenticate user",
+                    "error": "Could not authenticate user",
+                }
+            ),
+            400,
+        )
 
 
 @app.route("/")
