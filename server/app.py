@@ -59,6 +59,10 @@ def handle_article_link():
             400,
         )
 
+    # take all data and add it under the user id in the article table
+    userId = data.get("userId")
+
+
 
 @app.route("/get_dalle", methods=["GET"])
 def get_dalle():
