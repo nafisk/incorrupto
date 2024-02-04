@@ -63,9 +63,9 @@ def getSummary(text):
     return evaluate(prompt)
 
 
-def getOfInterest(text):
+def getPlacesOfInterest(text):
     prompt = (
-        "Given the text below, delimited by ```, list all persons and organizations mentioned.\n\n"
+        "Given the text below, delimited by ```, list all Important geographic Places mentioned.\n\n"
         + text
     )
     response = evaluate(prompt)
@@ -75,7 +75,17 @@ def getOfInterest(text):
 
     return names
 
+def getPersonsOfInterest(text):
+    prompt = (
+        "Given the text below, delimited by ```, list all persons mentioned.\n\n"
+        + text
+    )
+    response = evaluate(prompt)
+    pattern = re.compile(r"-\s([\w\s\(\)]+)")
+    matches = pattern.findall(response)
+    names = [match.strip() for match in matches]
 
+    return names
 def getDate(html):
     prompt = (
         "Given the HTML below, delimited by ```, extract the date of publication of the article.\n\n"
@@ -105,7 +115,8 @@ def getArticleInfo(html):
     INFO = {}
     INFO["text"] = getText(html)
     INFO["summary"] = getSummary(INFO["text"])
-    INFO["ofInterest"] = getOfInterest(INFO["text"])
+    INFO["PlacesOfInterest"] = getPlacesOfInterest(INFO["text"])
+    INFO["PersonsOfInterest"] = getPersonsOfInterest(INFO["text"])
     INFO["date"] = getDate(html)
     INFO["author"] = getAuthor(html)
     return INFO
@@ -119,5 +130,6 @@ def getVideoInfo(video_link):
     INFO = {}
     INFO["text"] = transcript
     INFO["summary"] = getSummary(transcript)
-    INFO["ofInterest"] = getOfInterest(transcript)
+    INFO["PlacesOfInterest"] = getPlacesOfInterest(transcript)
+    INFO["PersonsOfInterest"] = getPersonsOfInterest(transcript)
     return INFO

@@ -15,7 +15,7 @@ from db import authUser, addUser, addArticle, getArticles
 app = Flask(__name__)
 CORS(app)
 
-
+article_summaries = []
 @app.route("/submit-article-link", methods=["POST"])
 def handle_article_link():
     data = request.json
@@ -33,20 +33,17 @@ def handle_article_link():
                                    f"version that contains only the main article text, free from any HTML tags, "
                                    f"advertisements, navigation elements, and extraneous information. Here is the "
                                    f"HTML content: {soup.text}")
-        print("cleaned_article" ,len(cleaned_article),cleaned_article)
+        print("cleaned_article", len(cleaned_article), cleaned_article)
         article_summary = evaluate(f"Please provide a concise summary of the following article text in 5 to 10 "
                                    f"sentences, capturing the essential points and main themes: {cleaned_article}")
-        important_people = evaluate(f"From the article provided, identify and list the names of key individuals "
-                                    f"mentioned. Please format the output as a Python list, like this: ['person_1', "
-                                    f"'person_2', 'person_3']. Here is the article text: {cleaned_article}")
-        Sub_500_token=evaluate(cleaned_article+"This is an article that is gonna be fed into smalle NLP models which have a 500 token limit can you extract the important parts of this article and return an output so that the output represents the article but it is less than around 400 ")
-        analytics_metrics = analyze_text(Sub_500_token,cleaned_article)
+        article_summaries.append(article_summary)
+        Sub_500_token = evaluate(
+            cleaned_article + "This is an article that is gonna be fed into smalle NLP models which have a 500 token limit can you extract the important parts of this article and return an output so that the output represents the article but it is less than around 400 ")
+        analytics_metrics = analyze_text(Sub_500_token, cleaned_article)
         return jsonify(
             {
                 "articleInfo": articleInfo,
                 "cleanedArticleText": article_summary,
-                "important_people": important_people,
-                # "dalle_image_link": dalle_image_link,
                 "analytics_metrics": analytics_metrics  # converting a python dict
 
             }
@@ -61,6 +58,22 @@ def handle_article_link():
             ),
             400,
         )
+
+
+@app.route("/get_dalle", methods=["GET"])
+def get_dalle():
+    data = request.json
+    prompt = article_summaries[-1]
+
+    if prompt:
+        try:
+            # Use the generate_image function to create an image and get its URL
+            image_url = generate_image(prompt)
+            return jsonify({"imageUrl": image_url})
+        except Exception as e:
+            return jsonify({"message": "Failed to generate image", "error": str(e)}), 500
+    else:
+        return jsonify({"message": "No prompt provided", "error": "Please provide a prompt for image generation"}), 400
 
 
 @app.route("/submit-video-link", methods=["POST"])
