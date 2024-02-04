@@ -21,8 +21,6 @@ module.exports = {
         background: '#fffffe',
         paragraph: '#2b2c34',
         button: '#6246ea',
-        buttonText: '#fffffe',
-        stroke: '#2b2c34',
         main: '#fffffe',
         highlight: '#6246ea',
         secondary: '#d1d1e9',
