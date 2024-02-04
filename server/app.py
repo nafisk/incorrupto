@@ -18,97 +18,38 @@ CORS(app)
 
 @app.route("/submit-article-link", methods=["POST"])
 def handle_article_link():
-    try:
-        data = request.json
-        article_link = data.get("articleLink")
+    data = request.json
+    article_link = data.get("articleLink")
 
-        # Fetch the HTML content of the article
-        response = requests.get(article_link)
+    # Fetch the HTML content of the article
+    response = requests.get(article_link)
 
-        # Check if the request was successful
-        if response.status_code == 200:
-            try:
-                # Parse the HTML content
-                soup = BeautifulSoup(response.text, "html.parser")
-                articleInfo = getArticleInfo(soup.text)
-            except Exception as e:
-                return jsonify({"error": f"Failed to parse article content: {e}"}), 500
+    # Check if the request was successful
+    if response.status_code == 200:
+        # Parse the HTML content
+        soup = BeautifulSoup(response.text, "html.parser")
+        articleInfo = getArticleInfo(soup.text)
+        cleaned_article = evaluate(f"Given the HTML content extracted from a webpage, please provide a cleaned "
+                                   f"version that contains only the main article text, free from any HTML tags, "
+                                   f"advertisements, navigation elements, and extraneous information. Here is the "
+                                   f"HTML content: {soup.text}")
+        print("cleaned_article" ,len(cleaned_article),cleaned_article)
+        article_summary = evaluate(f"Please provide a concise summary of the following article text in 5 to 10 "
+                                   f"sentences, capturing the essential points and main themes: {cleaned_article}")
+        important_people = evaluate(f"From the article provided, identify and list the names of key individuals "
+                                    f"mentioned. Please format the output as a Python list, like this: ['person_1', "
+                                    f"'person_2', 'person_3']. Here is the article text: {cleaned_article}")
+        Sub_500_token=evaluate(cleaned_article+"This is an article that is gonna be fed into smalle NLP models which have a 500 token limit can you extract the important parts of this article and return an output so that the output represents the article but it is less than around 400 ")
+        analytics_metrics = analyze_text(Sub_500_token,cleaned_article)
+        return jsonify(
+            {
+                "articleInfo": articleInfo,
+                "cleanedArticleText": article_summary,
+                "important_people": important_people,
+                # "dalle_image_link": dalle_image_link,
+                "analytics_metrics": analytics_metrics  # converting a python dict
 
-            try:
-                cleaned_article = evaluate(
-                    "Your evaluation call for cleaned_article here"
-                )
-            except Exception as e:
-                return jsonify({"error": f"Failed during article cleaning: {e}"}), 500
-
-            try:
-                article_summary = evaluate(
-                    "Your evaluation call for article_summary here"
-                )
-            except Exception as e:
-                return (
-                    jsonify({"error": f"Failed during article summarization: {e}"}),
-                    500,
-                )
-
-            try:
-                important_people = evaluate(
-                    "Your evaluation call for important_people here"
-                )
-            except Exception as e:
-                return (
-                    jsonify({"error": f"Failed to identify important people: {e}"}),
-                    500,
-                )
-
-            try:
-                # dalle_image_link = generate_image(article_summary)
-                1 == 1
-            except Exception as e:
-                return (
-                    jsonify({"error": f"Failed to generate image with DALL-E: {e}"}),
-                    500,
-                )
-
-            try:
-                analytics_metrics = analyze_text(cleaned_article)
-            except Exception as e:
-                return jsonify({"error": f"Failed during text analysis: {e}"}), 500
-
-            # If all operations are successful, return the combined results
-            return jsonify(
-                {
-                    "articleInfo": articleInfo,
-                    "cleanedArticleText": article_summary,
-                    "important_people": important_people,
-                    "analytics_metrics": analytics_metrics,  # converting a python dict
-                }
-            )
-        else:
-            return (
-                jsonify(
-                    {
-                        "message": "Failed to fetch page",
-                        "error": "Could not retrieve the page from the "
-                        "provided link",
-                    }
-                ),
-                400,
-            )
-
-    except Exception as e:
-        # Catch any other exception that was not handled
-        return (
-            jsonify(
-                {
-                    "error": f"An unexpected error occurred: {e}",
-                    "dalle_image_link": dalle_image_link,
-                    "analytics_metrics": json.dumps(
-                        analytics_metrics
-                    ),  # converting a python dict
-                }
-            ),
-            500,
+            }
         )
     else:
         return (
