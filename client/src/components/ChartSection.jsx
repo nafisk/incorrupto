@@ -155,7 +155,6 @@ function ChartSection() {
   return (
     <div>
       {/* BarGraph and DoughnutPie side by side */}
-
       <DoughnutPie
         data={doughnutChartData}
         options={optionsDoughNut}
@@ -173,10 +172,12 @@ function ChartSection() {
 
       {/* PieChart - USE THIS AS NSFW*/}
       <PieChart data={pieChartData} options={optionsPie} />
-
       {/* Radar for left/midde/neutral 
       https://www.chartjs.org/docs/latest/charts/radar.html
       */}
+
+      
+      
     </div>
   );
 }

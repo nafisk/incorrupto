@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import ChartSection from './ChartSection';
 
-function AnalysisCharts() {
+function AnalysisCharts({ articleData }) {
   const [showYoutube, setShowYoutube] = useState(false);
 
   return (

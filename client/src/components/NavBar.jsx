@@ -1,8 +1,7 @@
 import logo from '../assets/icon.png';
 import Login from './Login';
 
-function Navbar() {
-
+function Navbar({}) {
   return (
     <nav className='border-gray-200 bg-background dark:bg-paragraph'>
       <div className='flex flex-wrap items-center justify-between max-w-screen-xl px-4 mx-auto'>

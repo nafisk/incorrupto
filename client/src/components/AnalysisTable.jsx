@@ -4,14 +4,9 @@ import ToggleSwitch from '@/components/ToggleSwitch';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-function ArticleTable() {
+function ArticleTable({ handleAnalysis, setUrl}) {
+  // Accepting the prop here
   const [showTable, setShowTable] = useState(false);
-  const [url, setUrl] = useState('');
-
-  const handleSubmit = () => {
-    console.log('submit');
-    console.log(url);
-  };
 
   return (
     <>
@@ -36,7 +31,7 @@ function ArticleTable() {
             <Button
               type='submit'
               className='rounded-r-xl bg-button text-buttonText hover:bg-highlight'
-              onClick={handleSubmit}
+              onClick={handleAnalysis}
             >
               Analyze
             </Button>
