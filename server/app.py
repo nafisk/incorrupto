@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from gemini import evaluate, getArticleInfo, getVideoInfo
 from huggingFaceModels import analyze_text
 from dalle3 import generate_image
-from db import authUser, addUser
+from db import authUser, addUser, addArticle, getArticles
 
 # from test.amir import analyze_text
 # from test.amir_dalle_3 import generate_image
@@ -173,6 +173,50 @@ def get_user():
                 {
                     "message": "Failed to authenticate user",
                     "error": "Could not authenticate user",
+                }
+            ),
+            400,
+        )
+
+
+@app.route("/create-article", methods=["POST"])
+def create_article():
+    data = request.json
+    userID = data.get("userID")
+    url = data.get("url")
+    data = data.get("data")
+    article = addArticle(
+        {
+            "cf1:userID": userID,
+            "cf1:url": url,
+            "cf1:data": data,
+        },
+    )
+    return jsonify(
+        {
+            "message": "Article created successfully",
+        }
+    )
+
+
+@app.route("/get-articles", methods=["GET"])
+def get_articles():
+    data = request.json
+    userID = data.get("userID")
+
+    articles = getArticles(userID)
+    if authUser:
+        return jsonify(
+            {
+                "articles": articles,
+            }
+        )
+    else:
+        return (
+            jsonify(
+                {
+                    "message": "Failed to get articles",
+                    "error": "No articles found",
                 }
             ),
             400,
