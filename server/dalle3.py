@@ -5,8 +5,7 @@ client = OpenAI()
 
 
 def generate_image(prompt):
-    prompt = prompt + (
-        "Please create an illustration that conveys the main themes of the article in a thoughtful and engaging manner.")
+    prompt = ("This is for a comic website. Use the following prompt and understand the main topic and create a funny relevant image in a comic/cartoony fashion") + prompt
 
     # Generate an image using the DALL-E model with the provided prompt
     response = client.images.generate(

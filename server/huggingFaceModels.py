@@ -9,7 +9,7 @@ load_dotenv()
 HUGGINGFACE_API_KEY = os.getenv('HUGGINGFACE_API_KEY')
 
 
-def analyze_text(text):
+def analyze_text(text,normal_text):
     # Headers using the API key from environment variables
     headers = {"Authorization": f"Bearer {HUGGINGFACE_API_KEY}"}
 
@@ -27,7 +27,14 @@ def analyze_text(text):
     results = {}
     # Iterate over each API URL and make a request
     for analysis_type, model_api_url in api_urls.items():
-        response = requests.post(model_api_url, headers=headers, json={"inputs": text})
+        response=None
+        if analysis_type == "AI detector":
+            # If the length of normal_text is greater than 1500 characters,
+            # slice the string to get the first 1500 characters only
+            text_to_analyze = normal_text[:1500] if len(normal_text) > 1500 else normal_text
+            response = requests.post(model_api_url, headers=headers, json={"inputs": text_to_analyze})
+        else:
+            response = requests.post(model_api_url, headers=headers, json={"inputs": text})
         if response.status_code == 200:
             results[analysis_type] = response.json()
         else:
