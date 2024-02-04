@@ -4,3 +4,4 @@ bs4
 youtube-transcript-api
 aiohttp
 psycopg2
+google-cloud-bigtable
