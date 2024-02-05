@@ -21,3 +21,12 @@ Each team member has gained valuable experience, with specific learnings in GCP 
 
 ## What's next for Incorrupto
 The immediate step is to deploy the tool for public use. Beyond that, we are exploring the development of a Chrome extension to bring our analytical capabilities directly into users' browsers for real-time content assessment.
+
+
+## Screenshots and images
+![demoOneCUhackathon-ezgif com-video-to-gif-converter](https://github.com/nafisk/incorrupto/assets/93888864/78383f04-d00f-4b84-aca4-aa0a7fb14229)
+![Screenshot 2024-02-04 at 1 30 39 AM](https://github.com/nafisk/incorrupto/assets/93888864/be061b17-6c88-42d4-a78b-86fb34e09f5a)
+
+![Screenshot 2024-02-04 at 9 05 51 AM](https://github.com/nafisk/incorrupto/assets/93888864/5ed6ff8f-5b80-4ca4-af36-e76bee70c792)
+![Screenshot 2024-02-04 at 9 06 00 AM](https://github.com/nafisk/incorrupto/assets/93888864/bcc08214-a453-4d15-b012-3701062b5441)
+![Screenshot 2024-02-04 at 9 06 09 AM](https://github.com/nafisk/incorrupto/assets/93888864/3f743dc1-3979-4ffc-bb7d-cdb97dcc973e)
